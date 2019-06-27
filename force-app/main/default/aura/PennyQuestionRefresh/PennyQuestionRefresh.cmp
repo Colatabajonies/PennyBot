@@ -1,0 +1,3 @@
+<aura:component implements="flexipage:availableForAllPageTypes" controller="PennyHelper">
+    <lightning:button variant="brand" label="Pull Results" title="Pull Results" onclick="{! c.handleClick }" />
+</aura:component>

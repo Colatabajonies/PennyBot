@@ -1,0 +1,11 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes,force:hasRecordId" access="global" controller="PennyPollData_ctr" >
+    <ltng:require scripts="{!$Resource.penny_chart}" afterScriptsLoaded="{!c.afterScriptsLoaded}" />
+    <aura:attribute name="myChart" type="Object"/>
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="chartData" type="Integer[]" />
+    <aura:attribute name="chartLabels" type="String[]" />
+    
+    <div style="width:100%">
+        <canvas id="{!'chart-' + v.recordId}"></canvas>
+    </div>
+</aura:component>

@@ -1,0 +1,5 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes,force:hasRecordId" access="global" controller="PennyPollData_ctr">
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="vfURL" type="String" />
+    <iframe src="{!v.vfURL + '?Id=' + v.recordId }" width="100%" height="500px;" frameBorder="0"/>
+</aura:component>

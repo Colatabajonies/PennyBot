@@ -1,0 +1,31 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes" access="global" controller="PennyPollData_ctr">
+    <aura:attribute name="refId" type="String" />
+    <aura:attribute name="engagementId" type="String" />
+    <aura:attribute name="engType" type="String" />
+    <aura:attribute name="displayALL" type="Boolean" default="false"/>
+    <aura:attribute name="chatZoom" type="String" default="100"/>
+    <aura:attribute name="vfURL" type="String" />
+    <aura:attribute name="autoScroll" type="Boolean" default="false"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <div class="outer" style="width:100%;height:100%;display:table;position:absolute;top:0;left:0;">
+        <aura:if isTrue="{!v.engType == 'Fastest Finger'}">
+            <c:Penny_FastestFinger recordId="{!v.engagementId}"/>
+        </aura:if>
+        <aura:if isTrue="{!v.engType == 'Questions'}">
+            <c:PennyQuestionDisplay recordId="{!v.engagementId}" displayALL="{!v.displayALL}" chatZoom="{!v.chatZoom}" autoScroll="{!v.autoScroll}"/>
+        </aura:if>
+        <aura:if isTrue="{!v.engType == 'Survey/Poll'}">
+            <c:PennyPollData recordId="{!v.engagementId}"/>
+        </aura:if>
+        <aura:if isTrue="{!v.engType == 'Word Cloud'}">
+            <c:PennyWordCloud recordId="{!v.engagementId}" vfURL="{!v.vfURL}"/>
+        </aura:if>
+        
+        <aura:if isTrue="{!v.engagementId == null}">
+            <div class="slds-text-heading_large" style="display:table-cell;text-align:center;vertical-align:middle;">There are no active Live Engagements.<br /><br />
+                <lightning:icon iconName="utility:events" alternativeText="Error!" variant="error" size="large"/>
+            </div>
+        </aura:if>
+    </div>
+</aura:component>

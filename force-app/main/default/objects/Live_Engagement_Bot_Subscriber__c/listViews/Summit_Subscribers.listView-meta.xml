@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Summit_Subscribers</fullName>
+    <columns>NAME</columns>
+    <columns>Contact__c</columns>
+    <columns>CREATED_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Bot_Developer_Name__c</field>
+        <operation>equals</operation>
+        <value>Summit</value>
+    </filters>
+    <label>Summit Subscribers</label>
+</ListView>

@@ -1,0 +1,10 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes,force:hasRecordId" access="global" controller="PennyPollData_ctr">
+	<ltng:require afterScriptsLoaded="{!c.doInit}" />
+    <aura:attribute name="questionText" type="String"/>
+    <aura:attribute name="theWinner" type="String"/>
+    <aura:attribute name="theAnswer" type="String"/>
+    
+    <div style="width:100%">
+        <canvas id="winnercanvas" style="width:100%;height:500px;"></canvas>
+    </div>
+</aura:component>

@@ -1,0 +1,6 @@
+<design:component>
+	<design:attribute name="displayALL" label="Display All Questions" />
+    <design:attribute name="chatZoom" label="Zoom % for chat bubbles" />
+    <design:attribute name="vfURL" label="URL to Word Cloud VF Page" />
+    <design:attribute name="autoScroll" label="Automatically scroll to bottom of chat" />
+</design:component>

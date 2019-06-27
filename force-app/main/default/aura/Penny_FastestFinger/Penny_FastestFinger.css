@@ -1,0 +1,11 @@
+.THIS {
+  background-color: black; 
+}
+.THIS body {
+	background: #000;
+	margin: 0;
+}
+
+.THIS canvas {
+	display: block;
+}

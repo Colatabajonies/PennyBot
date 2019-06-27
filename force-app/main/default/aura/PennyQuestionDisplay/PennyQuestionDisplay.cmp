@@ -1,0 +1,44 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes,force:hasRecordId" access="global" controller="PennyPollData_ctr" >
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="ChatConversation" type="Live_Engagement_Response__c[]" />
+    <aura:attribute name="displayALL" type="Boolean" default="false"/>
+    <aura:attribute name="chatZoom" type="String" default="100"/>
+    <aura:attribute name="autoScroll" type="Boolean" default="false"/>
+    <aura:attribute name="lastScrollSize" type="integer" default="0"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <ui:scrollerWrapper class="scrollerSize" aura:id="scrollerB">
+        <div id="chatdiv" style="{!'zoom:' + v.chatZoom + '%;'}">
+        <section role="log" class="slds-chat">
+            <ul class="slds-chat-list" style="padding:20px;">
+                <aura:iteration items="{!v.ChatConversation}" var="curChat">
+                    <li class="slds-chat-listitem slds-chat-listitem_outbound">
+                        <div class="slds-chat-message" style="padding-bottom:10px">
+                            <div class="slds-chat-message__body">
+                                <div class="slds-chat-message__text slds-chat-message__text_outbound" style="max-width:100%;">
+                                    <span>{!curChat.Response__c}</span>
+                                </div>
+                                <div class="slds-chat-message__meta" aria-label="{!'said '+ curChat.Contact_Name__c + ' at ' + curChat.TimeStamp__c}">{!curChat.Contact_Name__c} • <lightning:formattedDateTime value="{!curChat.TimeStamp__c}" hour="2-digit" minute="2-digit" />
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <aura:if isTrue="{!curChat.Question_Response__c != null}">
+                        <li class="slds-chat-listitem slds-chat-listitem_inbound">
+                            <div class="slds-chat-message">
+                                <div class="slds-chat-message__body">
+                                    <div class="slds-chat-message__text slds-chat-message__text_inbound" style="max-width:100%;">
+                                        <span>{!curChat.Question_Response__c}
+                                        </span>
+                                    </div>
+                                    <div class="slds-chat-message__meta" aria-label="{!'said Penny at ' + curChat.LastModifiedDate}">Penny • <lightning:formattedDateTime value="{!curChat.LastModifiedDate}" hour="2-digit" minute="2-digit" /></div>
+                                </div>
+                            </div>
+                        </li>
+                    </aura:if>
+                </aura:iteration>
+            </ul>
+        </section>
+    </div>
+    </ui:scrollerWrapper>
+</aura:component>

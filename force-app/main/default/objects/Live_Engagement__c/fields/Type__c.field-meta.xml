@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Type__c</fullName>
+    <externalId>false</externalId>
+    <label>Type</label>
+    <required>true</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Questions</fullName>
+                <default>false</default>
+                <label>Questions</label>
+            </value>
+            <value>
+                <fullName>Survey/Poll</fullName>
+                <default>false</default>
+                <label>Survey/Poll</label>
+            </value>
+            <value>
+                <fullName>Notification</fullName>
+                <default>false</default>
+                <label>Notification</label>
+            </value>
+            <value>
+                <fullName>Fastest Finger</fullName>
+                <default>false</default>
+                <label>Fastest Finger</label>
+            </value>
+            <value>
+                <fullName>Word Cloud</fullName>
+                <default>false</default>
+                <label>Word Cloud</label>
+            </value>
+            <value>
+                <fullName>Agent</fullName>
+                <default>false</default>
+                <label>Agent</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

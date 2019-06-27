@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <assignments>
+        <name>Store_Last_Customer_Input</name>
+        <label>Store Last Customer Input</label>
+        <locationX>210</locationX>
+        <locationY>228</locationY>
+        <assignmentItems>
+            <assignToReference>outUtterance</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>inUtterance</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <interviewLabel>Get Utterance {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Get Utterance</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <startElementReference>Store_Last_Customer_Input</startElementReference>
+    <status>Active</status>
+    <variables>
+        <name>inUtterance</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>outUtterance</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+</Flow>
