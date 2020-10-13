@@ -3,7 +3,7 @@ global class Penny_FastGetContact
     @InvocableMethod(label='Penny - Fast Get Contact')
     global static List<fContactActionResult> uContact(List<fContactActionRequest> requests) 
     {
-        //Get all the variables to return
+        //Get all the return variables
         List<fContactActionResult> objResults = new List<fContactActionResult>();
         fContactActionResult objResult = new fContactActionResult();
         objResult.objContact = null;

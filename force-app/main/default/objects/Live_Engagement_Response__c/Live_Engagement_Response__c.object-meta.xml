@@ -38,12 +38,16 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <!--<actionOverrides>
+        <actionName>View</actionName>
         <comment>Action override created by Lightning App Builder during activation.</comment>
         <content>Live_Engagement_Response_Record_Page</content>
         <formFactor>Large</formFactor>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>Flexipage</type>
-    </actionOverrides>
+    </actionOverrides>-->
     <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>The_Layout</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
@@ -56,7 +60,6 @@
     <enableSearch>false</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <externalSharingModel>ControlledByParent</externalSharingModel>
     <label>Live Engagement Response</label>
     <nameField>
         <displayFormat>LER-{0000000}</displayFormat>

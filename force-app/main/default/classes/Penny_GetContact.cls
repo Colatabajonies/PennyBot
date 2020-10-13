@@ -1,4 +1,4 @@
-global class Penny_GetContact 
+global with sharing class Penny_GetContact 
 {    
     @InvocableMethod(label='Penny - Get Contact')
     global static List<GetContactActionResponse> getContact(List<GetContactActionRequest> requests) 
@@ -8,6 +8,18 @@ global class Penny_GetContact
         GetContactActionResponse objResult = new GetContactActionResponse();
         objResult.boolContactCreated = false;
         objResult.objContact = null;
+        Map<Id,Contact> myContacts;
+        Cache.OrgPartition pCache;
+        
+        try
+        {
+            pCache = Cache.Org.getPartition('local.penny');
+        }
+        catch (Exception ex)
+        {
+            //No cache found
+            system.debug('Not using cache. Please configure org cache partition local.penny if using for events with 30+ participants...');
+        }
         
         try
         {
@@ -16,9 +28,36 @@ global class Penny_GetContact
                 //Get the main request
                 GetContactActionRequest currentRequest = requests[0];
                 //Run all validations
-                if (String.isNotBlank(currentRequest.sessionId))
+                
+                //First see if a ContactId is passed
+                if (String.isNotBlank(requests[0].contactId))
                 {
-                    List<MessagingSession> objSessions = new List<MessagingSession>([Select ID, EndUserContactId, MessagingEndUserId, MessagingEndUser.ContactId, MessagingEndUser.Name, MessagingEndUser.MessageType, MessagingEndUser.MessagingPlatformKey, MessagingEndUser.ProfilePictureURL FROM MessagingSession WHERE Id =: currentRequest.sessionId LIMIT 1]);
+                    Id theContactID = requests[0].contactId;
+                    //first try to get the cache
+                    if (pCache != null)
+                    {
+                        myContacts = (Map<Id,Contact>)pCache.get('contacts');
+                    }
+                    if (myContacts != null && myContacts.size() > 0)
+                    {
+                        objResult.objContact = myContacts.get(theContactID);
+                    }
+                    if (objResult.objContact == null)
+                    {
+                        //we need to pull from the DB
+                        List<Contact> lstContacts = new List<Contact>([SELECT ID, FirstName, Name FROM Contact WHERE ID =: theContactID LIMIT 1]);
+                        
+                        if (lstContacts != null && lstContacts.size() > 0)
+                        {
+                            objResult.objContact = lstContacts[0];
+                        }
+                    }
+                }
+                
+                //If we still dont have a contact...
+                if (objResult.objContact == null && String.isNotBlank(currentRequest.sessionId))
+                {
+                    List<MessagingSession> objSessions = new List<MessagingSession>([Select ID, EndUserContactId, MessagingEndUserId, MessagingEndUser.ContactId, MessagingEndUser.Name, MessagingEndUser.MessageType, MessagingEndUser.MessagingPlatformKey FROM MessagingSession WHERE Id =: currentRequest.sessionId LIMIT 1]);
                     if (objSessions != null && objSessions.size() > 0 && objSessions[0].MessagingEndUser.ContactId != null)
                     {
                         //Return the contact
@@ -36,12 +75,7 @@ global class Penny_GetContact
                         myContact.LastName = objSessions[0].MessagingEndUser.Name;
                         myContact.AccountId = currentRequest.accountID;
                         myContact.Penny_PrimaryMessaging_User__c = objSessions[0].MessagingEndUserId;
-                        if (objSessions[0].MessagingEndUser.MessageType == 'Facebook')
-                        {
-                            //myContact.Facebook_Persona_ID__c = objSessions[0].MessagingEndUser.MessagingPlatformKey;
-                            //myContact.Facebook_Picture__c = objSessions[0].MessagingEndUser.ProfilePictureURL;
-                        }
-                        else
+                        if (objSessions[0].MessagingEndUser.MessageType == 'Text')
                         {
                             myContact.MobilePhone = objSessions[0].MessagingEndUser.MessagingPlatformKey;
                         }
@@ -58,19 +92,23 @@ global class Penny_GetContact
                             UPDATE objUsers;
                         }
                     }
-                    
-                    //Finally check subscribe
-                    if (objResult.objContact != null)
+                }
+                
+                //Finally check subscribe
+                if (objResult.objContact != null)
+                {
+                    List<Live_Engagement_Bot_Subscriber__c> objSubscriptions = new List<Live_Engagement_Bot_Subscriber__c>([SELECT ID FROM Live_Engagement_Bot_Subscriber__c WHERE Contact__c =: objResult.objContact.Id LIMIT 1]); //AND Bot_Developer_Name__c =: requests[0].botDevName LIMIT 1]);
+                    if ((objSubscriptions == null || objSubscriptions.size() == 0) 
+                        && Schema.sObjectType.Live_Engagement_Bot_Subscriber__c.isCreateable() 
+                        && Schema.sObjectType.Live_Engagement_Bot_Subscriber__c.fields.Contact__c.isUpdateable() 
+                        && Schema.sObjectType.Live_Engagement_Bot_Subscriber__c.fields.Bot_Developer_Name__c.isUpdateable() 
+                       )
                     {
-                        List<Live_Engagement_Bot_Subscriber__c> objSubscriptions = new List<Live_Engagement_Bot_Subscriber__c>([SELECT ID FROM Live_Engagement_Bot_Subscriber__c WHERE Contact__c =: objResult.objContact.Id AND Bot_Developer_Name__c =: currentRequest.strBotName LIMIT 1]);
-                        if (objSubscriptions == null || objSubscriptions.size() == 0)
-                        {
-                            //We need to insert
-                            Live_Engagement_Bot_Subscriber__c newSub = new Live_Engagement_Bot_Subscriber__c();
-                            newSub.Contact__c = objResult.objContact.Id;
-                            newSub.Bot_Developer_Name__c = currentRequest.strBotName;
-                            INSERT newSub;
-                        }
+                        //We need to insert
+                        Live_Engagement_Bot_Subscriber__c newSub = new Live_Engagement_Bot_Subscriber__c();
+                        newSub.Contact__c = objResult.objContact.Id;
+                        newSub.Bot_Developer_Name__c = 'Penny'; //requests[0].botDevName;
+                        INSERT newSub;
                     }
                 }
             }
@@ -86,8 +124,10 @@ global class Penny_GetContact
     
     global class GetContactActionRequest 
     {
+        //@InvocableVariable(required=false)
+        //global String strBotName;
         @InvocableVariable(required=false)
-        global String strBotName;
+        global Id contactId;
         @InvocableVariable(required=false)
         global String sessionId;
         @InvocableVariable(required=false)

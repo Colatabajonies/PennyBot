@@ -1,37 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>PennyChatVFController</members>
-    <members>Penny_FastGetContact</members>
-    <members>Penny_GetContact</members>
-    <members>PennyHelper</members>
-    <members>PennyPollData_ctr</members>
-    <members>Penny_ProcessMultiEngage</members>
-    <members>Penny_ProcessResponse</members>
-    <members>Penny_UpdateContact</members>
-    <members>PennyWordCloudVF_ctr</members>
-    <members>PennyResponseWrapper</members>
-    <members>PennySchedule</members>
-        <name>ApexClass</name>
-    </types>
-    <types>
     <members>Live_Engagement_Bot_Subscriber__c</members>
     <members>Live_Engagement__c</members>
     <members>Live_Engagement_Response__c</members>
     <name>CustomObject</name>
     </types>
-    <types>
-    <members>Live_Engagement_Bot_Subscriber__c.All</members>
-    <members>Live_Engagement__c.All</members>
-    <name>ListView</name>
-  </types>
-  <types>
-  <members>Live_Engagement_Bot_Subscriber__c-Live Engagement Bot Subscriber Layout</members>
-    <members>Live_Engagement__c-Live Engagement Layout</members>
-    <members>Live_Engagement_Response__c-Live Engagement Response Layout</members>
-    <members>Live_Engagement_Response__c-Question Live Engagement Response Layout</members>
-  <name>Layout</name>
-  </types>
     <types>
         <members>Live_Engagement_Bot_Subscriber__c.Bot_Developer_Name__c</members>
     <members>Live_Engagement_Bot_Subscriber__c.Contact__c</members>
@@ -46,6 +20,7 @@
     <members>Live_Engagement__c.Session_Date__c</members>
     <members>Live_Engagement__c.Expected_Value__c</members>
     <members>Live_Engagement__c.Winner__c</members>
+    <members>Live_Engagement__c.AutoActivate__c</members>
     <members>Live_Engagement_Response__c.Contact__c</members>
     <members>Live_Engagement_Response__c.isValid__c</members>
     <members>Live_Engagement_Response__c.Live_Engagement__c</members>
@@ -58,7 +33,92 @@
         <name>CustomField</name>
     </types>
     <types>
-        <members>PennyChatVF</members>
+  <members>Live_Engagement_Response__c.Other</members>
+    <members>Live_Engagement_Response__c.Question</members>
+  <name>RecordType</name>
+  </types>
+    <types>
+    <members>penny</members>
+    <name>PlatformCachePartition</name>
+  </types> 
+  <types>
+    <members>Penny_FastGetContact</members>
+    <members>Penny_GetContact</members>
+    <members>PennyHelper</members>
+    <members>PennyPollData_ctr</members>
+    <members>Penny_ProcessMultiEngage</members>
+    <members>Penny_ProcessResponse</members>
+    <members>Penny_UpdateContact</members>
+    <members>PennyWordCloudVF_ctr</members>
+    <members>PennyResponseWrapper</members>
+    <members>PennySchedule</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>penny_chart</members>
+        <members>penny_cloudlayout2</members>
+        <members>penny_d3_v4</members>
+        <name>StaticResource</name>
+    </types>
+  <types>
+  <members>Live_Engagement_Bot_Subscriber__c</members>
+    <members>Live_Engagement__c</members>
+    <members>Penny_Activate_Dashboard</members>
+    <members>Penny_Clear_Data</members>
+    <members>Penny_Main_Display</members>
+  <name>CustomTab</name>
+  </types>
+
+  <types>
+  <members>Live_Engagement_Response_Record_Page</members>
+  <members>Live_Engagement_Record_Page</members>
+  <members>Penny_Activate_Dashboard</members>
+  <members>Penny_Clear_Data</members>
+  <members>Penny_Main_Display</members>
+  <members>Penny_Console_UtilityBar</members>
+  <members>Penny_Console_Home</members>
+  <members>Contact_Record_Page</members>
+  <name>FlexiPage</name>
+  </types>
+
+  <types>
+      
+    <members>Penny_Reports/Penny_Contact_Engagement_Chart_kew</members>
+    <members>Penny_Reports/Penny_Engagement_Responses_ajd</members>
+    <members>Penny_Reports/Penny_Fastest_Finger_Results_tpW</members>
+    <members>Penny_Reports/Penny_Question_Session_Results_U0K</members>
+    <members>Penny_Reports/Penny_Subscribers_edy</members>
+    <members>Penny_Reports/Poll_Results_K6J</members>
+    <name>Report</name>
+  </types>
+  
+  
+  <types>
+    <members>Penny</members>
+    <name>Bot</name>
+  </types>
+  <types>
+    <members>Penny_Console</members>
+    <name>CustomApplication</name>
+  </types>
+  <types>
+    <members>Screen_Shot_20190420_at_41640_PM</members>
+    <name>ContentAsset</name>
+  </types>
+  <types>
+    <members>Live_Engagement_Bot_Subscriber__c.All</members>
+    <members>Live_Engagement__c.All</members>
+    <name>ListView</name>
+  </types>
+  <types>
+  <members>Live_Engagement_Bot_Subscriber__c-Live Engagement Bot Subscriber Layout</members>
+    <members>Live_Engagement__c-Live Engagement Layout</members>
+    <members>Live_Engagement_Response__c-Live Engagement Response Layout</members>
+    <members>Live_Engagement_Response__c-Question Live Engagement Response Layout</members>
+  <name>Layout</name>
+  </types>
+    
+    <types>
         <members>PennyWordCloudVF</members>
         <name>ApexPage</name>
     </types>
@@ -74,26 +134,18 @@
     <members>Penny_FastestFinger</members>
     <members>PennyWordCloud</members>
     <members>PennyFullScreen</members>
+    <members>PennyActivateDashboard</members>
+    <members>PennyClearData</members>
         <name>AuraDefinitionBundle</name>
     </types>
-    <types>
-        <members>penny_chart</members>
-        <members>penny_cloudlayout</members>
-        <members>penny_d3</members>
-        <name>StaticResource</name>
-    </types>
-  <types>
-  <members>Live_Engagement_Response_Record_Page</members>
-  <name>FlexiPage</name>
-  </types>
-  <types>
-  <members>Live_Engagement_Response__c.Other</members>
-    <members>Live_Engagement_Response__c.Question</members>
-  <name>RecordType</name>
-  </types>
+    
   <types>
   <members>Live_Engagement_Response__c.The_Layout</members>
   <name>CompactLayout</name>
+  </types>
+  <types>
+  <members>Penny_Admin</members>
+  <name>PermissionSet</name>
   </types>
   <types>
     <members>Contact_Outbound_Updated</members>
@@ -102,5 +154,7 @@
     <members>Penny_Unsubscribe</members>
     <name>Flow</name>
   </types>
+  
+
     <version>45.0</version>
 </Package>

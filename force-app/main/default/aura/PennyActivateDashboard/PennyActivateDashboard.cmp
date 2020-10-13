@@ -1,0 +1,52 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" controller="PennyPollData_ctr">
+    <aura:attribute name="engagements" type="Live_Engagement__c[]" />
+    <aura:attribute name="engListViews" type="ListView[]"/>
+    <aura:attribute name="selectedList" type="String"/>
+    
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.selectedList}" action="{!c.handleListChange}"/>
+    
+    
+    <div style="text-align:center;">
+        <aura:if isTrue="{!v.Spinner}">
+            <div style="text-align: center;font-size: 1rem;margin:100px;"></div>
+            <div aura:id="spinnerId" class="slds-spinner_container">
+                <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </aura:if>
+        
+        <div style="margin:10px;text-align:left;">
+            <lightning:select label="Engagement Filter" name="listViewId" value="{!v.selectedList}">
+                <aura:iteration items="{!v.engListViews}" var="option">
+                    <option text="{!option.Name}" value="{!option.Id}"/>
+                </aura:iteration>
+            </lightning:select><br/>
+            <table>
+                <tr>
+                	<td style="width:15px;">
+                        <div style="background-color:#E6717C;border-radius: 50%;height:10px;width:10px;"></div>
+                    </td>
+                    <td>
+                        = Outbound Message Enabled
+                    </td>
+                </tr>
+            </table>
+        </div>
+        
+        <aura:iteration items="{!v.engagements}" var="curItem">
+            <button type="button" onclick="{!c.toggleActivate}" data-engid="{!curItem.Id}" style="padding:0px;border:none;margin:10px;display:inline-block;width:110px;vertical-align:top;">
+            	<div style="{!'vertical-align:middle;background-color:' + (curItem.Active__c ? '#00C6B7' : '#bbb') + ';border:solid;border-width: 2px;border-radius: 50%;height:110px;width:110px;'}">
+                    <div style="padding-top:40px;">{!curItem.Type__c}</div>
+                    <div style="{!'display:inline-flex;vertical-align:middle;background-color:' + (curItem.Send_Outbound_Message__c ? '#E6717C' : '#bbb') + ';border-radius: 50%;height:10px;width:10px;'}"></div>
+                </div>
+                <div style="">{!curItem.Name}</div>
+            </button>
+        </aura:iteration>
+    </div>
+</aura:component>

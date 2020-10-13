@@ -1,4 +1,4 @@
-<aura:component implements="forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes" access="global" controller="PennyPollData_ctr">
+<aura:component implements="forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes,lightning:isUrlAddressable" access="global" controller="PennyPollData_ctr">
     <aura:attribute name="refId" type="String" />
     <aura:attribute name="engagementId" type="String" />
     <aura:attribute name="engType" type="String" />

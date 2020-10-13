@@ -4,7 +4,17 @@ trigger trg_Penny_LiveEngagement on Live_Engagement__c (after insert, after upda
     String strMessage = '';
     Integer maxSize = 500;
     Boolean ClearedCache = false;
-    Cache.OrgPartition pCache = Cache.Org.getPartition('local.penny');
+    Cache.OrgPartition pCache;
+    
+    try
+    {
+       pCache = Cache.Org.getPartition('local.penny');
+    }
+    catch (Exception ex)
+    {
+        //No cache found
+        system.debug('Not using cache. Please configure org cache partition local.penny if using for events with 30+ participants...');
+    }
     
     for (Live_Engagement__c currentEngagement : trigger.new)
     {
@@ -14,32 +24,37 @@ trigger trg_Penny_LiveEngagement on Live_Engagement__c (after insert, after upda
             changed = !Trigger.oldMap.get(currentEngagement.Id).Active__c;
         }
         
-        if (changed && currentEngagement.Active__c && currentEngagement.Send_Outbound_Message__c && String.isNotBlank(currentEngagement.Bot_Developer_Name__c) && String.isNotBlank(currentEngagement.Message__c))
+        if (changed && currentEngagement.Active__c && currentEngagement.Send_Outbound_Message__c && String.isNotBlank(currentEngagement.Message__c))
         {
             strBotDevName = currentEngagement.Bot_Developer_Name__c;
             strMessage = currentEngagement.Message__c;
         }
         
-        List<Live_Engagement__c> engIds = (List<Live_Engagement__c>)pCache.get('EngagementIds');
-        if (currentEngagement.Active__c == changed && !ClearedCache)
+        //See if we want to clear the cache
+        if (pCache != null && currentEngagement.Active__c == changed && !ClearedCache)
         {
             PennyHelper.UpsertCache();
             ClearedCache = true;
         }
     }
     
-    //Update the cache
-    List<Live_Engagement__c> objEngagements = new List<Live_Engagement__c>([Select ID, Name, Type__c, Send_Outbound_Message__c, Message__c, isNumeric_Response__c, Min_Value__c, Max_Value__c, Bot_Developer_Name__c, Expected_Value__c, Winner__c FROM Live_Engagement__c WHERE Active__c =: TRUE AND Type__c != 'Notification' ORDER BY Name]);
-    pCache.put('EngagementIds', objEngagements);
+    //Get engagements and subscribers
+    List<Live_Engagement__c> objEngagements = new List<Live_Engagement__c>([Select ID, Name, Type__c, Send_Outbound_Message__c, Message__c, isNumeric_Response__c, Min_Value__c, Max_Value__c, Expected_Value__c, Winner__c FROM Live_Engagement__c WHERE Active__c =: TRUE AND Type__c != 'Notification' ORDER BY Name]);
     Map<Id,Contact> objSubscribers = new Map<Id,Contact>([SELECT ID, FirstName, Name FROM Contact WHERE Penny_PrimaryMessaging_User__c != null]);
-    pCache.put('contacts', objSubscribers);
     system.debug('Engagement Size: ' + objEngagements.size() + ' Contact Size: ' + objSubscribers.size());
+    
+    if (pCache != null)
+    {
+        //Write to cache
+        pCache.put('EngagementIds', objEngagements);
+        pCache.put('contacts', objSubscribers);
+    }
     
     //Only continue if we have something to go on
     if (String.isNotBlank(strBotDevName) && String.isNotBlank(strMessage))
     {
         //Get all the Subscribers (Contacts) for this Bot
-        List<Live_Engagement_Bot_Subscriber__c> objSubscribers = new List<Live_Engagement_Bot_Subscriber__c>([SELECT Id, Contact__c FROM Live_Engagement_Bot_Subscriber__c WHERE Bot_Developer_Name__c =: strBotDevName]);
+        List<Live_Engagement_Bot_Subscriber__c> objSubscribers = new List<Live_Engagement_Bot_Subscriber__c>([SELECT Id, Contact__c FROM Live_Engagement_Bot_Subscriber__c]); //WHERE Bot_Developer_Name__c =: strBotDevName]);
         List<ID> objContactIDs = new List<ID>();
 
         
@@ -54,7 +69,7 @@ trigger trg_Penny_LiveEngagement on Live_Engagement__c (after insert, after upda
             //Get the contacts
             List<Contact> objContacts = new List<Contact>([SELECT Id, Penny_LOutboundMessage__c, firstName, lastname, name FROM Contact WHERE ID in: objContactIDs]);
             
-            if (objContacts.size() > 0)
+            if (objContacts.size() > 0 && Schema.sObjectType.Contact.isUpdateable() && Schema.sObjectType.Contact.fields.Penny_LOutboundMessage__c.isUpdateable())
             {
                 //Loop through contacts to set the message
                 for (Contact currentContact : objContacts)

@@ -1,8 +1,7 @@
 ({
 	doInit : function(component, event, helper) 
     {
-		helper.refreshResults(component, helper, null);
-        
+        helper.refreshResults(component, helper, null);
         if (component.get('v.refId') == null)
         {
             var inter = window.setInterval(

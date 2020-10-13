@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Valid_Fastest_Finger</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND( TEXT(Type__c) = &#39;Fastest Finger&#39;, OR( 
+
+AND( isNumeric_Response__c ,OR(Min_Value__c &gt; Max_Value__c , 
+ISNULL(Min_Value__c), 
+ISNULL(Max_Value__c) 
+)) , 
+ISBLANK( Expected_Value__c ) 
+))</errorConditionFormula>
+    <errorMessage>Fastest finger must have an expected value, and if numeric, valid range of correct values.</errorMessage>
+</ValidationRule>

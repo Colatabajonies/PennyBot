@@ -9,7 +9,7 @@
             return;
         }
         //alert('refresh called');
-        var action = component.get('c.getActiveEngagement'); 
+        var action = component.get('c.getActiveEngagement');
         action.setParams({
             "engagementId" : component.get('v.refId') 
         });
@@ -21,7 +21,14 @@
                 {
                     if (component.get('v.engagementId') != null && myResults.Id != component.get('v.engagementId') && component.get('v.engType') == myResults.Type__c)
                     {
-                        $A.get('e.force:refreshView').fire();
+                        if ($A.get('e.force:refreshView') != null)
+                        {
+                            $A.get('e.force:refreshView').fire();
+                        }
+                        else
+                        {
+                            location.reload();
+                        }
                     }
                     component.set('v.engagementId', myResults.Id);
                     component.set('v.engType', myResults.Type__c);

@@ -1,4 +1,4 @@
-global class Penny_ProcessMultiEngage 
+global with sharing class Penny_ProcessMultiEngage 
 {
     @InvocableMethod(label='Penny - Process MultiEngagement Response')
     global static List<MultiActionResponse> processResponse(List<MultiActionRequest> requests) 
@@ -19,11 +19,11 @@ global class Penny_ProcessMultiEngage
                 //Get the main request
                 MultiActionRequest currentRequest = requests[0];
                 //Run all validations
-                if (currentRequest.objContact != null && String.IsNotBlank(currentRequest.strBotName) && String.IsNotBlank(currentRequest.strUtterance) && currentRequest.dbEngagementNum > 0)
+                if (currentRequest.objContact != null && String.IsNotBlank(currentRequest.strUtterance) && currentRequest.dbEngagementNum > 0)
                 {
                     //NEW CACHE &&&&&&&&&&&&&&&&&&&&&
                     List<Live_Engagement__c> objMultiEngagements = (List<Live_Engagement__c>)pCache.get('EngagementIds');
-                    List<Live_Engagement__c> objEngagements = PennyHelper.GetEngagementstoProcess(objMultiEngagements, currentRequest.strBotName, currentRequest.strUtterance);
+                    List<Live_Engagement__c> objEngagements = PennyHelper.GetEngagementstoProcess(objMultiEngagements, 'Penny', currentRequest.strUtterance);
                     
                     //List<Live_Engagement__c> objEngagements = new List<Live_Engagement__c>([Select ID, Name, Type__c, Send_Outbound_Message__c, Message__c, isNumeric_Response__c, Min_Value__c, Max_Value__c FROM Live_Engagement__c WHERE Active__c =: TRUE AND Bot_Developer_Name__c =: currentRequest.strBotName AND Type__c != 'Notification' ORDER BY Name]);
                     if (objEngagements != null || objEngagements.size() > 0 && currentRequest.dbEngagementNum <= objEngagements.size())
@@ -57,8 +57,8 @@ global class Penny_ProcessMultiEngage
     {
         @InvocableVariable(required=false)
         global Contact objContact;
-        @InvocableVariable(required=false)
-        global String strBotName;
+        //@InvocableVariable(required=false)
+        //global String strBotName;
         @InvocableVariable(required=false)
         global String strUtterance;
         @InvocableVariable(required=false)

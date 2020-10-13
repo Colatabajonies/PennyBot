@@ -52,7 +52,6 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <externalSharingModel>ReadWrite</externalSharingModel>
     <label>Live Engagement Bot Subscriber</label>
     <nameField>
         <displayFormat>LEBS-{0000000}</displayFormat>

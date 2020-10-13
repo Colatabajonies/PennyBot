@@ -1,4 +1,4 @@
-global class PennyResponseWrapper implements Comparable
+global with sharing class PennyResponseWrapper implements Comparable
 {
     public Live_Engagement_Response__c resp;
     // Constructor

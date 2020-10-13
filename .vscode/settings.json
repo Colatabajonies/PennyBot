@@ -1,0 +1,7 @@
+{
+    "html.suggest.angular1": false,
+    "html.suggest.ionic": false,
+    "salesforcedx-vscode-core.show-cli-success-msg": false,
+    "editor.defaultFormatter": "salesforce.salesforcedx-vscode-apex",
+    "git.ignoreLimitWarning": true
+}

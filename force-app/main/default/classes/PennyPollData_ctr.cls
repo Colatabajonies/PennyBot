@@ -12,6 +12,58 @@ public class PennyPollData_ctr
     }
     
     @AuraEnabled
+    public static List<ListView> getListViews()
+    {
+        List<ListView> objLVs = new List<ListView>([SELECT Id, Name FROM ListView WHERE SobjectType =: 'Live_Engagement__c' ORDER BY Name]);
+        return objLVs;
+    }
+    
+    @AuraEnabled
+    public static List<Live_Engagement__c> getAllEngagements(string listViewId)
+    {
+        ApexPages.StandardSetController ssc = new ApexPages.StandardSetController(database.getQueryLocator('select id, name from Live_Engagement__c limit 10000'));
+        if (string.isNotBlank(listViewId))
+        {
+            ssc.setFilterId(listViewId);
+        }
+        
+        Set<Id> allIds = new Set<Id>();
+        ssc.first();
+        ssc.setPageSize(1000);
+        Boolean hasNext = true;
+        while(hasNext){
+            allIds.addAll(new Map<Id, sObject>(ssc.getRecords()).keySet());
+            hasNext = ssc.getHasNext();
+            ssc.next();
+        }
+        
+        List<Live_Engagement__c> objEngagements = new List<Live_Engagement__c>([SELECT Id, Name, Active__c, Type__c, Send_Outbound_Message__c FROM Live_Engagement__c WHERE Id IN :allIds ORDER BY Session_Date__c]);
+        return objEngagements;
+    }
+    
+    @AuraEnabled
+    public static List<Live_Engagement__c> toggleActivateEngagement(String engagementId, string listViewId)
+    {
+        List<Live_Engagement__c> objEngagements = getAllEngagements(listViewId);
+        for (Live_Engagement__c currentEng : objEngagements)
+        {
+            if (currentEng.Id == engagementId)
+            {
+                currentEng.Active__c = !currentEng.Active__c;
+            }
+            else
+            {
+                currentEng.Active__c = false;
+            }
+        }
+        UPDATE objEngagements;
+        
+        //Now fetch them again
+        objEngagements = getAllEngagements(listViewId);
+        return objEngagements;
+    }
+    
+    @AuraEnabled
     public static Live_Engagement__c getActiveEngagement(String engagementId)
     {
         List<Live_Engagement__c> objEngagements;
@@ -76,7 +128,7 @@ public class PennyPollData_ctr
         }
         else
         {
-           objResponses = new List<Live_Engagement_Response__c>([SELECT Id, Response__c, Contact__c, Contact_Name__c, TimeStamp__c, LastModifiedDate, Question_Response__c From Live_Engagement_Response__c WHERE Live_Engagement__c =: engagementId AND Publish_Question__c  = TRUE ORDER BY TimeStamp__c ASC]);
+            objResponses = new List<Live_Engagement_Response__c>([SELECT Id, Response__c, Contact__c, Contact_Name__c, TimeStamp__c, LastModifiedDate, Question_Response__c From Live_Engagement_Response__c WHERE Live_Engagement__c =: engagementId AND Publish_Question__c  = TRUE ORDER BY TimeStamp__c ASC]);
         }
         
         return objResponses;
@@ -154,16 +206,16 @@ public class PennyPollData_ctr
         
         //No more non-numeric polls
         /*else
-        {
-            List<Live_Engagement_Response__c> objResponses = getPollVotes(engagementId);
-            for (Live_Engagement_Response__c currentResponse : objResponses)
-            {
-                if (!objLabels.contains(currentResponse.Response__c.tolowercase()))
-                {
-                    objLabels.add(currentResponse.Response__c.tolowercase());
-                }
-            }
-        } */
+{
+List<Live_Engagement_Response__c> objResponses = getPollVotes(engagementId);
+for (Live_Engagement_Response__c currentResponse : objResponses)
+{
+if (!objLabels.contains(currentResponse.Response__c.tolowercase()))
+{
+objLabels.add(currentResponse.Response__c.tolowercase());
+}
+}
+} */
         return objLabels;
     }
     
@@ -196,6 +248,42 @@ public class PennyPollData_ctr
         }
         
         return objResponses;
+    }
+    
+    @AuraEnabled
+    public static string clearData()
+    {
+        try
+        {
+            
+            List<Live_Engagement_Bot_Subscriber__c> objSubs = new List<Live_Engagement_Bot_Subscriber__c>([SELECT ID FROM Live_Engagement_Bot_Subscriber__c]);
+            DELETE objSubs;
+            
+            List<Live_Engagement_Response__c> objEngRs = new List<Live_Engagement_Response__c>([SELECT ID FROM Live_Engagement_Response__c]);
+            DELETE objEngRs;
+            
+            List<MessagingEndUser> objMUs = new List<MessagingEndUser>([SELECT ID, IsOptedOut FROM MessagingEndUser]);
+            /*for (MessagingEndUser currentU : objMUs)
+            {
+                currentU.IsOptedOut = true;
+            }
+            if (objMUs.size() > 0)
+            { 
+                UPDATE objMUs; */
+                DELETE objMUs;
+            //}
+            
+            
+            List<Contact> objContacts = new List<Contact>([SELECT ID FROM Contact]);
+            DELETE objContacts;
+        }
+        catch (Exception e) 
+        {
+            // "Convert" the exception into an AuraHandledException
+            throw new AuraHandledException('Error: '
+                                           + e.getMessage());    
+        }
+        return '';
     }
     
     public class PollResult

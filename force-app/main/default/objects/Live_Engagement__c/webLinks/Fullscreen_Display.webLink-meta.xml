@@ -16,5 +16,5 @@
     <protected>false</protected>
     <showsLocation>false</showsLocation>
     <showsStatus>false</showsStatus>
-    <url>https://gilmorelabsp19.lightning.force.com/c/PennyFullScreen.app?engagementId={!Live_Engagement__c.Id}&amp;displayALL=false&amp;chatZoom=300</url>
+    <url>https://penny1.lightning.force.com/c/PennyFullScreen.app?engagementId={!Live_Engagement__c.Id}&amp;displayALL=false&amp;chatZoom=300</url>
 </WebLink>

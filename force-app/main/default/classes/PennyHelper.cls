@@ -9,6 +9,16 @@ public class PennyHelper
     Public static string transferText = 'Give me a second, and I\'ll be right with you...';
     Public static string errorText = 'Oops, looks like there\'s a problem. Make sure you reply with a valid response.';
     
+    /*Public static string noEngagementText = 'Hi there, I\'m not able to process your response at this time. Stay tuned, I\'ll be looking for your feedback soon.';
+    Public static string questionRText = 'Thanks for your question. We\'ll review it and let you know when we find an answer.';
+    Public static string ffWrong = 'I\'m sorry. That does not appear to be the right answer';
+    Public static string ffRight = 'Congratulations, You were the first one to get the right answer. Stay tuned to be announced as the winner!';
+    Public static string ffOver = 'Thanks for your response. Unfortunately, someone has already responded with the correct answer. Try to be a bit faster next time!';
+    Public static string wordCloudText = 'Got it. We\'ll add your response to the Word Cloud.';
+    Public static string transferText = 'Give me a second, and I\'ll be right with you...';
+    Public static string errorText = 'Oops, looks like there\'s a problem. Make sure you reply with a valid response.';
+    */
+    
     @AuraEnabled
     public static void UpsertCache()
     {
@@ -226,8 +236,8 @@ public class PennyHelper
             //First try to match the input with an engagement
             for (Live_Engagement__c currentEngagement : objMultiEngagements)
             {
-                if (currentEngagement.Bot_Developer_Name__c == strBotName)
-                {
+                //if (currentEngagement.Bot_Developer_Name__c == strBotName)
+                //{
                     engFound = true;
                     if ((onlyPolls && (currentEngagement.isNumeric_Response__c || currentEngagement.Type__c == 'Survey/Poll'))
                         ||
@@ -236,7 +246,7 @@ public class PennyHelper
                     {
                         objEngagements.add(currentEngagement);
                     }
-                }
+                //}
             }
             
             //If we found engagements but not any matching the engagement type... just add them
@@ -244,10 +254,10 @@ public class PennyHelper
             {
                 for (Live_Engagement__c currentEngagement : objMultiEngagements)
                 {
-                    if (currentEngagement.Bot_Developer_Name__c == strBotName)
-                    {
+                    //if (currentEngagement.Bot_Developer_Name__c == strBotName)
+                    //{
                         objEngagements.add(currentEngagement);
-                    }
+                	//}
                 }
             }
         }
